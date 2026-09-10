@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="referrer" content="no-referrer" />
+<title>Sign in — Gmailfy</title>
+<style>
+  :root {
+    --bg: #0d0d10; --card: #16161a; --card-2: #1d1d22; --line: #2a2a31;
+    --text: #ecedf1; --dim: #93939e; --faint: #6a6a75;
+    --accent: #ea4335; --ok: #35c98b; --bad: #f0574d;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    background: radial-gradient(900px 400px at 15% -12%, rgba(234,67,53,.16), transparent 70%), var(--bg);
+    color: var(--text);
+    font: 16px/1.6 "Segoe UI", system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    padding: 32px 18px 72px;
+  }
+  .wrap { max-width: 620px; margin: 0 auto; }
+  header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .mark { width: 46px; height: 46px; border-radius: 13px; flex: none; background: var(--accent); display: grid; place-items: center; }
+  .mark svg { width: 30px; height: 30px; }
+  h1 { font-size: 22px; font-weight: 600; letter-spacing: -.2px; }
+  .sub { color: var(--dim); font-size: 14px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px; margin-bottom: 14px; }
+  .card h2 { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+  p + p, p + .field, p + .row { margin-top: 12px; }
+  a { color: #7fb4ff; }
+  code, .mono { font-family: Consolas, "Cascadia Mono", ui-monospace, monospace; font-size: 13px;
+    background: var(--card-2); border: 1px solid var(--line); border-radius: 6px; padding: 2px 7px; word-break: break-all; }
+  .field { display: grid; gap: 6px; margin-top: 14px; }
+  .field label { font-size: 13px; color: var(--dim); }
+  input, textarea {
+    width: 100%; padding: 13px 14px; border-radius: 11px; background: var(--card-2);
+    border: 1px solid var(--line); color: var(--text);
+    font: 15px/1.5 Consolas, "Cascadia Mono", monospace; outline: 0; resize: vertical;
+  }
+  input:focus, textarea:focus { border-color: var(--accent); }
+  #code { letter-spacing: 3px; text-transform: uppercase; text-align: center; font-size: 20px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px; justify-content: center;
+    width: 100%; min-height: 52px; padding: 0 20px; border: 0; border-radius: 12px;
+    background: var(--card-2); color: var(--text);
+    font: 16px/1 "Segoe UI", system-ui, sans-serif; cursor: pointer;
+  }
+  .btn.primary { background: #fff; color: #1f1f1f; font-weight: 600; }
+  .btn.secondary { background: var(--card-2); }
+  .btn:disabled { opacity: .55; cursor: default; }
+  .btn:not(:disabled):active { transform: translateY(1px); }
+  .gmark { width: 20px; height: 20px; flex: none; }
+  .row { display: flex; gap: 10px; align-items: center; }
+  .note { color: var(--faint); font-size: 13px; margin-top: 14px; line-height: 1.55; }
+  .msg { margin-top: 14px; padding: 12px 14px; border-radius: 11px; font-size: 14px; display: none; }
+  .msg.show { display: block; }
+  .msg.bad { background: rgba(240,87,77,.12); border: 1px solid rgba(240,87,77,.4); color: #ffb3ad; }
+  .msg.ok { background: rgba(53,201,139,.12); border: 1px solid rgba(53,201,139,.4); color: #8fe6c1; }
+  .hide { display: none !important; }
+  .done { text-align: center; padding: 30px 22px; }
+  .tick { width: 68px; height: 68px; margin: 0 auto 16px; border-radius: 50%; background: rgba(53,201,139,.15);
+    display: grid; place-items: center; }
+  .tick svg { width: 34px; height: 34px; fill: none; stroke: var(--ok); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+  .done h2 { font-size: 20px; margin-bottom: 6px; }
+  details { margin-top: 8px; }
+  summary { cursor: pointer; color: var(--dim); font-size: 14px; padding: 10px 0; }
+  .who { display: flex; align-items: center; gap: 10px; justify-content: center; color: var(--dim); font-size: 14px; margin-top: 4px; }
+  .spin { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--line); border-top-color: var(--accent);
+    animation: spin .8s linear infinite; display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .copybox { display: flex; gap: 10px; margin-top: 12px; }
+  .copybox textarea { min-height: 90px; font-size: 12px; }
+  .copybox .btn { width: auto; min-width: 92px; }
+  .site-foot { margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--line);
+    color: var(--faint); font-size: 13px; text-align: center; line-height: 1.7; }
+  .site-foot .disclaim { margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark"><svg viewBox="0 0 72 72"><g fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M38 17 H15 A7 7 0 0 0 8 24 V48 A7 7 0 0 0 15 55 H38 Z M13 24 L23 32.5 L33 24 V30.5 L23 39 L13 30.5 Z" fill="#fff"/><path d="M54 27 L46 35.5 L54 44" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M46 35.5 H58 A7 7 0 0 1 65 42.5 V48" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g></svg></div>
+    <div>
+      <h1>Gmailfy</h1>
+      <div class="sub">signing in for your XENEON EDGE</div>
+    </div>
+  </header>
+
+  <!-- not configured -->
+  <section class="card hide" id="unconfigured">
+    <h2>This page has no Google key yet</h2>
+    <p style="color:var(--dim)">Whoever published this page needs to fill in
+      <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code> at the top of its
+      source. Until then you can still sign in with a key of your own, below.</p>
+  </section>
+
+  <!-- ask for the code -->
+  <section class="card hide" id="ask">
+    <h2>Enter the code from your EDGE</h2>
+    <p style="color:var(--dim)">The widget is showing a QR code and, under it, the same code
+      in letters. Type that here — or just scan the QR and skip this.</p>
+    <div class="field">
+      <label for="code">Code from the widget</label>
+      <input type="text" id="code" spellcheck="false" autocomplete="off" placeholder="XXXXXX XXXXXX XXXXXX" />
+    </div>
+    <div class="row" style="margin-top:16px"><button class="btn secondary" id="use-code" type="button">Continue</button></div>
+    <div class="msg bad" id="ask-err"></div>
+  </section>
+
+  <!-- sign in -->
+  <section class="card hide" id="signin">
+    <h2>Sign in to Gmail</h2>
+    <p style="color:var(--dim)">Your EDGE is waiting. Approving here sends the key straight
+      to it, encrypted so that only that screen can open it — nobody else, including this
+      page's owner, can read it in transit.</p>
+    <div class="row" style="margin-top:18px">
+      <button class="btn primary" id="go" type="button">
+        <svg class="gmark" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.6 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.8 6.1C12.3 13.3 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.6c0-1.6-.1-3.2-.4-4.6H24v9.1h12.4c-.5 2.9-2.2 5.3-4.6 7l7.6 5.9c4.4-4.1 6.9-10.1 6.7-17.4z"/><path fill="#FBBC05" d="M10.4 28.7a14.5 14.5 0 0 1 0-9.4l-7.8-6.1a24 24 0 0 0 0 21.6l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.9 2.3-8.3 2.3-6.3 0-11.7-3.8-13.6-9.8l-7.8 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
+        Sign in with Google
+      </button>
+    </div>
+    <p class="note">You will land back on this page. It asks Google only for permission to
+      read and send your mail — nothing else, and nothing is stored here.</p>
+    <div class="msg bad" id="err"></div>
+    <details id="own-key">
+      <summary>Use a Google key of my own instead</summary>
+      <p class="note" style="margin-top:0">For your own Google Cloud project — no shared app,
+        no 100-user cap. Create an OAuth client of type <b>Web application</b> with this exact
+        redirect URI:</p>
+      <div class="copybox">
+        <input type="text" id="redirect" readonly />
+        <button class="btn" id="copy-redirect" type="button">Copy</button>
+      </div>
+      <div class="field"><label for="cid">Client ID</label>
+        <input type="text" id="cid" spellcheck="false" placeholder="…apps.googleusercontent.com" /></div>
+      <div class="field"><label for="csec">Client secret</label>
+        <input type="text" id="csec" spellcheck="false" placeholder="GOCSPX-…" /></div>
+    </details>
+  </section>
+
+  <!-- working -->
+  <section class="card hide" id="working">
+    <div class="done">
+      <div class="spin" style="margin-bottom:14px"></div>
+      <h2 id="working-title">Finishing…</h2>
+      <p class="sub" id="working-sub">Handing the key to your EDGE.</p>
+    </div>
+  </section>
+
+  <!-- done -->
+  <section class="card hide" id="done">
+    <div class="done">
+      <div class="tick"><svg viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></svg></div>
+      <h2>Look at your EDGE</h2>
+      <p class="sub">Your inbox is opening there now. You can close this page.</p>
+      <div class="who" id="who"></div>
+    </div>
+  </section>
+
+  <!-- fallback: hand the string over by clipboard -->
+  <section class="card hide" id="manual">
+    <h2>Copy this to the widget</h2>
+    <p style="color:var(--dim)">The key could not be delivered automatically. Copy the string
+      below, then on the EDGE tap <b>Paste a connection string instead</b> — or paste it into
+      <b>Gmail connection</b> in the widget's iCUE settings.</p>
+    <div class="copybox">
+      <textarea id="conn" readonly spellcheck="false"></textarea>
+      <button class="btn primary" id="copy-conn" type="button">Copy</button>
+    </div>
+    <p class="note">Treat it like a password: it lets whoever holds it read and send mail as
+      you. Revoke it any time at
+      <a href="https://myaccount.google.com/permissions" target="_blank" rel="noreferrer">myaccount.google.com/permissions</a>.</p>
+  </section>
+
+  <footer class="site-foot">
+    <a href="about.html">About Gmailfy</a> ·
+    <a href="privacy.html">Privacy Policy</a> ·
+    <a href="terms.html">Terms of Service</a>
+    <div class="disclaim">Gmailfy is an independent project, not affiliated with or endorsed
+      by Google LLC or Corsair Memory, Inc.</div>
+  </footer>
+</div>
+
+<script>
+"use strict";
+(function () {
+
+  // ── The published app's Google client ────────────────────────────
+  // Nothing secret is written into this page. The shared client's id is
+  // fetched from the Edge Function below, and its secret never leaves that
+  // function — the code exchange happens there, not here.
+  let sharedClientId = "";
+
+  // The pairing courier. Must match widget/scripts/pair.js.
+  const SUPABASE_URL = "https://fuajudsysudnlagarbdi.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_aqXr92VnqQFGB_ZdNPuM6w_cDR78JyO";
+  const FN_URL = SUPABASE_URL + "/functions/v1/google-oauth";
+  const KDF_SALT = "mailbox.pair.v1";
+  const KDF_ROUNDS = 150000;
+
+  const SCOPE = "https://www.googleapis.com/auth/gmail.modify";
+  const AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
+  const TOKEN_URL = "https://oauth2.googleapis.com/token";
+  const PROFILE_URL = "https://gmail.googleapis.com/gmail/v1/users/me/profile";
+  const REDIRECT = location.origin + location.pathname;
+
+  const $ = id => document.getElementById(id);
+
+  // Every call carries the project's publishable key, which is what the
+  // function's JWT gate checks. It grants nothing on its own.
+  async function callFunction(body) {
+    const r = await fetch(FN_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: SUPABASE_KEY,
+        Authorization: "Bearer " + SUPABASE_KEY,
+      },
+      body: JSON.stringify(body),
+    });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || ("HTTP " + r.status));
+    return j;
+  }
+  const show = (id, on) => $(id).classList.toggle("hide", !on);
+  const fail = (id, text) => { const e = $(id); e.textContent = text; e.classList.add("show"); };
+  const clearFail = id => $(id).classList.remove("show");
+
+  $("redirect").value = REDIRECT;
+
+  // ── crypto, mirroring pair.js ────────────────────────────────────
+  const b64url = bytes => btoa(String.fromCharCode.apply(null, bytes))
+    .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+
+  async function derive(secret) {
+    const material = await crypto.subtle.importKey(
+      "raw", new TextEncoder().encode(String(secret).trim().toUpperCase()),
+      "PBKDF2", false, ["deriveBits"]);
+    const bits = new Uint8Array(await crypto.subtle.deriveBits({
+      name: "PBKDF2",
+      salt: new TextEncoder().encode(KDF_SALT),
+      iterations: KDF_ROUNDS,
+      hash: "SHA-256",
+    }, material, 512));
+    const id = Array.from(bits.slice(0, 32)).map(b => b.toString(16).padStart(2, "0")).join("");
+    const key = await crypto.subtle.importKey("raw", bits.slice(32), "AES-GCM", false, ["encrypt"]);
+    return { id, key };
+  }
+
+  async function deposit(secret, connection) {
+    const { id, key } = await derive(secret);
+    const iv = new Uint8Array(12);
+    crypto.getRandomValues(iv);
+    const box = new Uint8Array(await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv }, key, new TextEncoder().encode(connection)));
+    const r = await fetch(SUPABASE_URL + "/rest/v1/mailbox_pairings", {
+      method: "POST",
+      headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({ id, payload: b64url(box), iv: b64url(iv) }),
+    });
+    if (!r.ok) throw new Error(r.status === 409 ? "That code has already been used." : "HTTP " + r.status);
+  }
+
+  // ── PKCE ─────────────────────────────────────────────────────────
+  function randomString(n) {
+    const a = new Uint8Array(n);
+    crypto.getRandomValues(a);
+    return b64url(a);
+  }
+
+  async function challenge(verifier) {
+    const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier));
+    return b64url(new Uint8Array(d));
+  }
+
+  // ── state ────────────────────────────────────────────────────────
+  const CODE_RE = /^[0-9ABCDEFGHJKMNPQRSTVWXYZ]{26}$/;
+  const cleanCode = s => String(s || "").toUpperCase().replace(/[^0-9A-Z]/g, "");
+
+  let pairSecret = cleanCode((location.hash.match(/[#&]k=([^&]+)/) || [])[1] || "");
+  if (pairSecret && !CODE_RE.test(pairSecret)) pairSecret = "";
+
+  let configured = false;
+
+  function creds() {
+    const cid = $("cid").value.trim();
+    const csec = $("csec").value.trim();
+    if (cid && csec) return { cid, csec, own: true };
+    if (configured) return { cid: sharedClientId, csec: "", own: false };
+    return null;
+  }
+
+  function copy(text, button) {
+    const done = () => {
+      const was = button.textContent;
+      button.textContent = "Copied";
+      setTimeout(() => { button.textContent = was; }, 1400);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else fallback();
+    function fallback() {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); done(); } catch (e) {}
+      ta.remove();
+    }
+  }
+
+  $("copy-redirect").addEventListener("click", () => copy(REDIRECT, $("copy-redirect")));
+
+  // ── screens ──────────────────────────────────────────────────────
+  function showSignIn() {
+    show("ask", false);
+    show("signin", true);
+    show("unconfigured", !configured);
+    if (!configured) $("own-key").open = true;
+  }
+
+  function showAsk(message) {
+    show("signin", false);
+    show("ask", true);
+    if (message) fail("ask-err", message);
+    $("code").focus();
+  }
+
+  $("use-code").addEventListener("click", () => {
+    clearFail("ask-err");
+    const c = cleanCode($("code").value);
+    if (!CODE_RE.test(c)) return fail("ask-err", "That code should be 26 letters and digits. Check it against the widget.");
+    pairSecret = c;
+    showSignIn();
+  });
+
+  $("code").addEventListener("keydown", e => { if (e.key === "Enter") $("use-code").click(); });
+
+  // ── start ────────────────────────────────────────────────────────
+  $("go").addEventListener("click", async () => {
+    clearFail("err");
+    const c = creds();
+    if (!c) return fail("err", "No Google key is configured. Open “Use a Google key of my own” and paste one in.");
+    if (!/\.apps\.googleusercontent\.com$/.test(c.cid)) {
+      return fail("err", "That Client ID looks wrong — it should end in .apps.googleusercontent.com");
+    }
+
+    const verifier = randomString(48);
+    const state = randomString(12);
+    sessionStorage.setItem("gmw_pending", JSON.stringify({
+      cid: c.cid, csec: c.csec, own: c.own, verifier, state, secret: pairSecret,
+    }));
+
+    const url = new URL(AUTH_URL);
+    url.searchParams.set("client_id", c.cid);
+    url.searchParams.set("redirect_uri", REDIRECT);
+    url.searchParams.set("response_type", "code");
+    url.searchParams.set("scope", SCOPE);
+    url.searchParams.set("access_type", "offline");
+    // Without this Google returns a refresh token only on the very first
+    // consent, and a second run would hand back a key that dies in an hour.
+    url.searchParams.set("prompt", "consent");
+    url.searchParams.set("state", state);
+    url.searchParams.set("code_challenge", await challenge(verifier));
+    url.searchParams.set("code_challenge_method", "S256");
+    location.assign(url.toString());
+  });
+
+  // ── return leg ───────────────────────────────────────────────────
+  async function finish() {
+    const params = new URLSearchParams(location.search);
+    const code = params.get("code");
+    const error = params.get("error");
+    if (!code && !error) return false;
+
+    // The code is single-use, but there is no reason to leave it sitting in
+    // the address bar, in history, or in a screenshot.
+    history.replaceState(null, "", REDIRECT);
+
+    let pending = null;
+    try { pending = JSON.parse(sessionStorage.getItem("gmw_pending") || "null"); } catch (e) {}
+    sessionStorage.removeItem("gmw_pending");
+
+    if (error) {
+      showSignIn();
+      fail("err", error === "access_denied"
+        ? "You cancelled the sign-in — nothing was changed."
+        : "Google said: " + error);
+      return true;
+    }
+    if (!pending || params.get("state") !== pending.state) {
+      showSignIn();
+      fail("err", "Lost track of this sign-in. Start again from the code on your EDGE.");
+      return true;
+    }
+    if (pending.own) { $("cid").value = pending.cid; $("csec").value = pending.csec; }
+
+    show("signin", false);
+    show("ask", false);
+    show("working", true);
+
+    let tok;
+    try {
+      if (pending.own) {
+        // Their own client, their own secret: straight to Google, no
+        // function in the path and nothing for us to be trusted with.
+        const r = await fetch(TOKEN_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            code,
+            client_id: pending.cid,
+            client_secret: pending.csec,
+            redirect_uri: REDIRECT,
+            grant_type: "authorization_code",
+            code_verifier: pending.verifier,
+          }).toString(),
+        });
+        tok = await r.json();
+        if (!r.ok) throw new Error(tok.error_description || tok.error || ("HTTP " + r.status));
+      } else {
+        tok = await callFunction({
+          action: "exchange",
+          code,
+          code_verifier: pending.verifier,
+          redirect_uri: REDIRECT,
+        });
+      }
+    } catch (e) {
+      show("working", false);
+      showSignIn();
+      fail("err", "Could not swap the code for a key — " + e.message);
+      return true;
+    }
+
+    if (!tok.refresh_token) {
+      show("working", false);
+      showSignIn();
+      fail("err", "Google did not return a long-lived key. Remove this app at "
+        + "myaccount.google.com/permissions and sign in here once more.");
+      return true;
+    }
+
+    let email = tok.email || "";
+    if (!email) {
+      try {
+        const p = await fetch(PROFILE_URL, { headers: { Authorization: "Bearer " + tok.access_token } });
+        email = (await p.json()).emailAddress || "";
+      } catch (e) {}
+    }
+
+    // The shared client's connection string carries no credentials — the
+    // widget renews through the same function. A user's own client keeps
+    // carrying theirs, so that path never depends on us at all.
+    const payload = pending.own
+      ? JSON.stringify({ i: pending.cid, s: pending.csec, r: tok.refresh_token, e: email })
+      : JSON.stringify({ r: tok.refresh_token, e: email });
+    const connection = "gmw1." + b64url(new TextEncoder().encode(payload));
+
+    if (pending.secret) {
+      try {
+        await deposit(pending.secret, connection);
+        show("working", false);
+        show("done", true);
+        $("who").textContent = email;
+        return true;
+      } catch (e) {
+        // Fall through to the clipboard route rather than stranding a
+        // sign-in the user has already given.
+        console.warn("pairing handover failed:", e);
+      }
+    }
+
+    show("working", false);
+    show("manual", true);
+    $("conn").value = connection;
+    $("copy-conn").addEventListener("click", () => copy(connection, $("copy-conn")));
+    return true;
+  }
+
+  async function loadConfig() {
+    try {
+      const cfg = await callFunction({ action: "config" });
+      sharedClientId = cfg.client_id || "";
+      configured = !!sharedClientId;
+    } catch (e) {
+      configured = false;
+    }
+  }
+
+  loadConfig().then(() => finish()).then(returned => {
+    if (returned) return;
+    if (pairSecret) showSignIn();
+    else showAsk("");
+  });
+})();
+</script>
+</body>
+</html>
