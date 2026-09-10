@@ -7,14 +7,14 @@
 <title>Sign in — Gmail Connect</title>
 <style>
   :root {
-    --bg: #0d0d10; --card: #16161a; --card-2: #1d1d22; --line: #2a2a31;
-    --text: #ecedf1; --dim: #93939e; --faint: #6a6a75;
+    --bg: #0a0a0a; --card: #171717; --card-2: #212121; --line: #2e2e2e;
+    --text: #fafafa; --dim: #a3a3a3; --faint: #737373;
     --accent: #ea4335; --ok: #35c98b; --bad: #f0574d;
     color-scheme: dark;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body {
-    background: radial-gradient(900px 400px at 15% -12%, rgba(234,67,53,.16), transparent 70%), var(--bg);
+    background: var(--bg);
     color: var(--text);
     font: 16px/1.6 "Segoe UI", system-ui, -apple-system, sans-serif;
     min-height: 100vh;
@@ -81,7 +81,7 @@
 <body>
 <div class="wrap">
   <header>
-    <div class="mark"><svg viewBox="0 0 72 72"><g fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M38 17 H15 A7 7 0 0 0 8 24 V48 A7 7 0 0 0 15 55 H38 Z M13 24 L23 32.5 L33 24 V30.5 L23 39 L13 30.5 Z" fill="#fff"/><path d="M54 27 L46 35.5 L54 44" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M46 35.5 H58 A7 7 0 0 1 65 42.5 V48" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g></svg></div>
+    <div class="mark"><svg viewBox="0 0 24 24"><path fill="#fff" fill-rule="evenodd" clip-rule="evenodd" d="M4.5 5H19.5A2.5 2.5 0 0 1 22 7.5V16.5A2.5 2.5 0 0 1 19.5 19H4.5A2.5 2.5 0 0 1 2 16.5V7.5A2.5 2.5 0 0 1 4.5 5Z M4 7.7L12 13.5L20 7.7V10.4L12 16.2L4 10.4Z"/></svg></div>
     <div>
       <h1>Gmail Connect</h1>
       <div class="sub">signing in for your XENEON EDGE</div>
@@ -118,13 +118,15 @@
       </button>
     </div>
     <p class="note">Google's screen says <b>Emailfy</b> — that is this app. (Google does not
-      allow "Gmail" in an app name.) <a href="privacy.html">What it can see</a></p>
+      allow "Gmail" in an app name.) <a href="privacy.html">What it can see</a> ·
+      <a href="own-key.html">Use your own key</a></p>
     <div class="msg bad" id="err"></div>
     <details id="own-key">
       <summary>Use a Google key of my own instead</summary>
       <p class="note" style="margin-top:0">For your own Google Cloud project — no shared app,
-        no 100-user cap. Create an OAuth client of type <b>Web application</b> with this exact
-        redirect URI:</p>
+        no 100-user cap, and no warning about somebody else's app.
+        <a href="own-key.html">Step-by-step guide</a> (about five minutes, once).
+        Create an OAuth client of type <b>Web application</b> with this exact redirect URI:</p>
       <div class="copybox">
         <input type="text" id="redirect" readonly />
         <button class="btn" id="copy-redirect" type="button">Copy</button>
@@ -383,9 +385,23 @@
 
     if (error) {
       showSignIn();
-      fail("err", error === "access_denied"
-        ? "You cancelled the sign-in — nothing was changed."
-        : "Google said: " + error);
+      if (error === "access_denied") {
+        // Google returns the same code whether the person pressed Cancel or
+        // the shared app has run out of its 100 places, so both are named.
+        const e = $("err");
+        e.textContent = "";
+        e.appendChild(document.createTextNode(
+          "Sign-in did not complete. Either you cancelled it, or this app has reached Google's "
+          + "limit of 100 people. If you did not cancel, use a Google key of your own — "));
+        const a = document.createElement("a");
+        a.href = "own-key.html";
+        a.textContent = "here is how";
+        e.appendChild(a);
+        e.appendChild(document.createTextNode("."));
+        e.classList.add("show");
+      } else {
+        fail("err", "Google said: " + error);
+      }
       return true;
     }
     if (!pending || params.get("state") !== pending.state) {

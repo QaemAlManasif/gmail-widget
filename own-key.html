@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Use your own Google key — Gmail Connect</title>
+<style>
+  :root { --bg:#0a0a0a; --card:#171717; --card-2:#212121; --line:#2e2e2e; --text:#fafafa;
+          --dim:#a3a3a3; --faint:#737373; --accent:#ea4335; --ok:#35c98b; color-scheme:dark; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font:16px/1.7 "Segoe UI",system-ui,-apple-system,sans-serif;
+       padding:40px 20px 90px}
+  .wrap{max-width:720px;margin:0 auto}
+  header{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+  .mark{width:46px;height:46px;border-radius:13px;flex:none;background:var(--accent);display:grid;place-items:center}
+  .mark svg{width:28px;height:28px}
+  h1{font-size:25px;font-weight:600;letter-spacing:-.2px}
+  .sub{color:var(--dim);font-size:14px}
+  .lede{color:#d4d4d4;margin:20px 0 10px}
+  h2{font-size:18px;font-weight:600;margin:34px 0 6px;display:flex;align-items:center;gap:10px}
+  .num{width:26px;height:26px;border-radius:50%;flex:none;background:var(--card-2);border:1px solid var(--line);
+       display:grid;place-items:center;font-size:13px;color:var(--dim)}
+  p,li{color:#d4d4d4}
+  ol.steps{margin:10px 0 0 22px;display:grid;gap:9px}
+  ul{margin:8px 0 0 22px}
+  li{margin-bottom:5px}
+  a{color:#7fb4ff}
+  code{font-family:Consolas,ui-monospace,monospace;font-size:13px;background:var(--card-2);
+       border:1px solid var(--line);border-radius:6px;padding:2px 7px;word-break:break-all}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:18px 0}
+  .copybox{display:flex;gap:10px;margin-top:10px}
+  .copybox input{flex:1;padding:12px 14px;border-radius:10px;background:var(--card-2);border:1px solid var(--line);
+       color:var(--text);font:14px/1.4 Consolas,ui-monospace,monospace;outline:0}
+  .btn{min-height:46px;padding:0 18px;border:0;border-radius:10px;background:var(--card-2);color:var(--text);
+       font:15px/1 "Segoe UI",system-ui,sans-serif;cursor:pointer}
+  .btn:hover{filter:brightness(1.15)}
+  .cta{display:inline-block;margin-top:10px;padding:14px 24px;border-radius:12px;background:#fff;color:#1f1f1f;
+       font-weight:600;text-decoration:none}
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:15px}
+  td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:top;color:#d4d4d4}
+  td:first-child{color:var(--dim);white-space:nowrap;width:38%}
+  footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);color:var(--faint);font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark"><svg viewBox="0 0 24 24"><path fill="#fff" fill-rule="evenodd" clip-rule="evenodd" d="M4.5 5H19.5A2.5 2.5 0 0 1 22 7.5V16.5A2.5 2.5 0 0 1 19.5 19H4.5A2.5 2.5 0 0 1 2 16.5V7.5A2.5 2.5 0 0 1 4.5 5Z M4 7.7L12 13.5L20 7.7V10.4L12 16.2L4 10.4Z"/></svg></div>
+    <div>
+      <h1>Use your own Google key</h1>
+      <div class="sub">about five minutes, once</div>
+    </div>
+  </header>
+
+  <p class="lede">Gmail Connect normally signs you in through a shared Google app. Google caps
+  any shared app that reads mail at <b>100 people, for the lifetime of the app</b>, and shows an
+  "unverified app" warning until it passes a paid annual security audit.</p>
+
+  <div class="box">
+    <b>Making your own key removes both.</b> No cap, no warning about someone else's app, and
+    nothing shared with any other user — the key belongs to a Google project you own, and only
+    you ever use it. Gmail Connect then talks to Google directly, with nothing of ours in the
+    path at all.
+  </div>
+
+  <p>You will need a Google account. There is no billing, no card, and no code to write.</p>
+
+  <h2><span class="num">1</span> Make a project</h2>
+  <ol class="steps">
+    <li>Open <a href="https://console.cloud.google.com/projectcreate" target="_blank" rel="noreferrer">console.cloud.google.com/projectcreate</a>.</li>
+    <li>Give it any name — <code>My Mail Widget</code> is fine — and press <b>Create</b>.</li>
+    <li>Wait for the notification that it is ready, and make sure it is the project selected in
+      the bar at the top.</li>
+  </ol>
+
+  <h2><span class="num">2</span> Turn on the Gmail API</h2>
+  <ol class="steps">
+    <li>Open <a href="https://console.cloud.google.com/apis/library/gmail.googleapis.com" target="_blank" rel="noreferrer">the Gmail API page</a>.</li>
+    <li>Press <b>Enable</b>. That is the whole step.</li>
+  </ol>
+
+  <h2><span class="num">3</span> Fill in the consent screen</h2>
+  <p>Google moved this out of "APIs &amp; Services" into the <b>Google Auth Platform</b> during
+  2025, so most guides you will find online describe menus that no longer exist. These are the
+  pages as they are now:</p>
+  <table>
+    <tr><td><a href="https://console.cloud.google.com/auth/branding" target="_blank" rel="noreferrer">Branding</a></td>
+        <td>App name and your own email address. Do <b>not</b> upload a logo — that alone forces
+            a verification review you do not need.</td></tr>
+    <tr><td><a href="https://console.cloud.google.com/auth/audience" target="_blank" rel="noreferrer">Audience</a></td>
+        <td>Choose <b>External</b>. Add your own Gmail address under <b>Test users</b>, then press
+            <b>Publish app</b>.</td></tr>
+    <tr><td><a href="https://console.cloud.google.com/auth/scopes" target="_blank" rel="noreferrer">Data access</a></td>
+        <td>Add or remove scopes → paste <code>https://www.googleapis.com/auth/gmail.modify</code>
+            into the manual box → <b>Add to table</b> → <b>Update</b> → <b>Save</b>.</td></tr>
+  </table>
+
+  <div class="box">
+    <b>Publish it, don't leave it in Testing.</b> A project in Testing hands out keys that Google
+    expires after <b>7 days</b>, and your widget would drop out every week. Publishing shows you
+    an "unverified app" screen the first time you sign in — that is expected for a project only
+    you use, and you click through it once.
+  </div>
+
+  <h2><span class="num">4</span> Create the key</h2>
+  <ol class="steps">
+    <li>Open <a href="https://console.cloud.google.com/auth/clients" target="_blank" rel="noreferrer">Clients</a> → <b>Create client</b>.</li>
+    <li>Application type: <b>Web application</b>.</li>
+    <li>Under <b>Authorised redirect URIs</b>, add this exactly — trailing slash included:
+      <div class="copybox">
+        <input type="text" id="redirect" readonly />
+        <button class="btn" id="copy" type="button">Copy</button>
+      </div>
+    </li>
+    <li>Press <b>Create</b>. Google shows a <b>Client ID</b> and a <b>Client secret</b> once —
+      copy both before closing that dialog.</li>
+  </ol>
+
+  <h2><span class="num">5</span> Sign in with it</h2>
+  <ol class="steps">
+    <li>On your EDGE, the widget is showing a QR code. Scan it, or open the sign-in page and enter
+      the code printed under it.</li>
+    <li>On the sign-in page open <b>Use a Google key of my own instead</b>.</li>
+    <li>Paste your Client ID and Client secret, then press <b>Sign in with Google</b>.</li>
+    <li>Click through the "unverified app" screen — <b>Advanced</b> → <b>Go to …</b> — and approve.</li>
+  </ol>
+
+  <p style="margin-top:18px">Your inbox opens on the panel. From then on the widget renews its own
+  access with your key and never contacts us again.</p>
+
+  <a class="cta" href="./">Back to sign-in</a>
+
+  <footer>
+    Gmail Connect is an independent project. It is not affiliated with, endorsed by, or sponsored
+    by Google LLC or Corsair Memory, Inc. Gmail is a trademark of Google LLC; XENEON and iCUE are
+    trademarks of Corsair Memory, Inc.
+    <br><br>
+    <a href="about.html">About</a> · <a href="privacy.html">Privacy Policy</a> ·
+    <a href="terms.html">Terms of Service</a>
+  </footer>
+</div>
+
+<script>
+"use strict";
+(function () {
+  // The redirect URI has to match byte for byte, so it is derived from where
+  // this guide is actually served rather than typed into the page.
+  var url = location.origin + location.pathname.replace(/own-key\.html$/, "");
+  var input = document.getElementById("redirect");
+  var button = document.getElementById("copy");
+  input.value = url;
+  button.addEventListener("click", function () {
+    var done = function () {
+      button.textContent = "Copied";
+      setTimeout(function () { button.textContent = "Copy"; }, 1400);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(done, fallback);
+    } else fallback();
+    function fallback() {
+      input.select();
+      try { document.execCommand("copy"); done(); } catch (e) {}
+    }
+  });
+})();
+</script>
+</body>
+</html>
