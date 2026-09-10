@@ -88,19 +88,17 @@
     </div>
   </header>
 
-  <!-- not configured -->
+  <!-- only reachable if the sign-in service is misconfigured or down -->
   <section class="card hide" id="unconfigured">
-    <h2>This page has no Google key yet</h2>
-    <p style="color:var(--dim)">Whoever published this page needs to fill in
-      <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code> at the top of its
-      source. Until then you can still sign in with a key of your own, below.</p>
+    <h2>Sign-in is unavailable right now</h2>
+    <p style="color:var(--dim)">This is on our side, not yours — please try again shortly.
+      If you would rather not wait, you can sign in with a Google key of your own below.</p>
   </section>
 
   <!-- ask for the code -->
   <section class="card hide" id="ask">
     <h2>Enter the code from your EDGE</h2>
-    <p style="color:var(--dim)">The widget is showing a QR code and, under it, the same code
-      in letters. Type that here — or just scan the QR and skip this.</p>
+    <p style="color:var(--dim)">It is printed under the QR code on the panel.</p>
     <div class="field">
       <label for="code">Code from the widget</label>
       <input type="text" id="code" spellcheck="false" autocomplete="off" placeholder="XXXXXX XXXXXX XXXXXX" />
@@ -112,20 +110,15 @@
   <!-- sign in -->
   <section class="card hide" id="signin">
     <h2>Sign in to Gmail</h2>
-    <p style="color:var(--dim)">Your EDGE is waiting. Approving here sends the key straight
-      to it, encrypted so that only that screen can open it — nobody else, including this
-      page's owner, can read it in transit.</p>
+    <p style="color:var(--dim)">Your EDGE is waiting. This takes one tap.</p>
     <div class="row" style="margin-top:18px">
       <button class="btn primary" id="go" type="button">
         <svg class="gmark" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.6 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.8 6.1C12.3 13.3 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.6c0-1.6-.1-3.2-.4-4.6H24v9.1h12.4c-.5 2.9-2.2 5.3-4.6 7l7.6 5.9c4.4-4.1 6.9-10.1 6.7-17.4z"/><path fill="#FBBC05" d="M10.4 28.7a14.5 14.5 0 0 1 0-9.4l-7.8-6.1a24 24 0 0 0 0 21.6l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.9 2.3-8.3 2.3-6.3 0-11.7-3.8-13.6-9.8l-7.8 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
         Sign in with Google
       </button>
     </div>
-    <p class="note">You will land back on this page. It asks Google only for permission to
-      read and send your mail — nothing else, and nothing is stored here.
-      <br><br>Google's own screen calls this app <b>Emailfy</b>: Google does not allow an app
-      name to contain "Gmail", so the sign-in carries a different name from the widget. It is
-      the same app.</p>
+    <p class="note">Google's screen says <b>Emailfy</b> — that is this app. (Google does not
+      allow "Gmail" in an app name.) <a href="privacy.html">What it can see</a></p>
     <div class="msg bad" id="err"></div>
     <details id="own-key">
       <summary>Use a Google key of my own instead</summary>
