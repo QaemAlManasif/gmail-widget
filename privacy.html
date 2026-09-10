@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Privacy Policy — Gmailfy</title>
+<style>
+  :root { --bg:#0d0d10; --card:#16161a; --line:#2a2a31; --text:#ecedf1; --dim:#93939e; --accent:#ea4335; color-scheme:dark; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font:16px/1.7 "Segoe UI",system-ui,-apple-system,sans-serif;padding:40px 20px 80px}
+  .wrap{max-width:720px;margin:0 auto}
+  header{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+  .mark{width:44px;height:44px;border-radius:12px;flex:none;background:var(--accent);display:grid;place-items:center}
+  .mark svg{width:28px;height:28px}
+  h1{font-size:26px;font-weight:600;letter-spacing:-.2px}
+  h2{font-size:18px;font-weight:600;margin:32px 0 8px}
+  p,li{color:#d3d4da}
+  ul{margin:8px 0 0 22px}
+  li{margin-bottom:6px}
+  .updated{color:var(--dim);font-size:14px;margin-bottom:28px}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:20px 0}
+  a{color:#7fb4ff}
+  footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);color:var(--dim);font-size:14px}
+  code{font-family:Consolas,ui-monospace,monospace;font-size:13px;background:#1d1d22;border:1px solid var(--line);border-radius:6px;padding:2px 6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark"><svg viewBox="0 0 72 72"><g fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M38 17 H15 A7 7 0 0 0 8 24 V48 A7 7 0 0 0 15 55 H38 Z M13 24 L23 32.5 L33 24 V30.5 L23 39 L13 30.5 Z" fill="#fff"/><path d="M54 27 L46 35.5 L54 44" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M46 35.5 H58 A7 7 0 0 1 65 42.5 V48" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g></svg></div>
+    <h1>Privacy Policy</h1>
+  </header>
+  <p class="updated">Gmailfy — a widget for the Corsair XENEON EDGE. Last updated 10 September 2026.</p>
+
+  <p>Gmailfy shows your Gmail on the touchscreen of a Corsair XENEON EDGE and lets you
+  read, reply to, and organise it there. This policy explains exactly what it touches.</p>
+
+  <div class="box">
+    <b>The short version.</b> Your mail goes from Google to your own screen and nowhere
+    else. We operate no mail server, no analytics, and no account system. We cannot read
+    your mail, and we hold nothing that would let us.
+  </div>
+
+  <h2>What Gmailfy accesses</h2>
+  <p>With your permission, Gmailfy uses one Google API scope:</p>
+  <ul>
+    <li><code>https://www.googleapis.com/auth/gmail.modify</code> — read your messages,
+      change their labels (read/unread, starred, archived, spam, bin), and send mail you
+      compose in the widget.</li>
+  </ul>
+  <p>It does not request permission to delete your account's data permanently, to read your
+  contacts, your calendar, your Drive, or your profile beyond the email address of the
+  mailbox you connect.</p>
+
+  <h2>Where your mail goes</h2>
+  <p>The widget calls Google's Gmail API <b>directly from your device</b> over HTTPS. Message
+  content, subjects, senders and attachments travel between Google and your XENEON EDGE and
+  are not routed through us or through any third party. Nothing is copied to a server of
+  ours, because there is no such server.</p>
+  <p>Mail is held only in the widget's memory while it is on screen. It is not written to
+  disk except for whatever caching the device's browser engine performs on its own.</p>
+
+  <h2>What is stored, and where</h2>
+  <ul>
+    <li><b>On your device.</b> The Google refresh token for the mailbox you connected, your
+      display preferences, and any unsent draft, all in the widget's local browser storage.
+      Pressing <b>Disconnect</b> in the widget erases them and asks Google to revoke the
+      token.</li>
+    <li><b>During sign-in only, for at most ten minutes.</b> Signing in happens in a real
+      browser, which then has to hand the key to your EDGE. It does so through a small
+      database record. That record is <b>encrypted before it leaves the browser</b>, with a
+      key derived from a one-time secret that exists only on your EDGE's screen and in the
+      device that scanned it. The record is deleted the moment your widget collects it, and
+      expires automatically after ten minutes either way. We cannot decrypt it: the key is
+      never sent to us.</li>
+  </ul>
+
+  <h2>What we never do</h2>
+  <ul>
+    <li>We do not sell, rent or share your data with anyone.</li>
+    <li>We do not use your data for advertising, and show no ads.</li>
+    <li>We do not use your data to train machine-learning or AI models.</li>
+    <li>No human at Gmailfy reads your mail. No mechanism exists that would allow it.</li>
+    <li>We run no analytics, tracking pixels or third-party scripts on the sign-in page.</li>
+    <li>Remote images in messages are blocked by default, so senders are not told when you
+      open their mail.</li>
+  </ul>
+
+  <h2>Limited Use disclosure</h2>
+  <div class="box">
+    Gmailfy's use and transfer of information received from Google APIs to any other app
+    will adhere to the
+    <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noreferrer">Google
+    API Services User Data Policy</a>, including the Limited Use requirements.
+  </div>
+
+  <h2>Withdrawing access</h2>
+  <p>You can disconnect at any time, in either of two places:</p>
+  <ul>
+    <li>In the widget: <b>Settings → Disconnect</b>. This forgets the key and asks Google to
+      revoke it.</li>
+    <li>In your Google Account:
+      <a href="https://myaccount.google.com/permissions" target="_blank" rel="noreferrer">myaccount.google.com/permissions</a>,
+      which cuts off access even if the device is out of reach.</li>
+  </ul>
+  <p>Because nothing about your mailbox is held by us, there is nothing further for us to
+  delete on request.</p>
+
+  <h2>Children</h2>
+  <p>Gmailfy is not directed at children under 13 and should not be used by them.</p>
+
+  <h2>Changes</h2>
+  <p>If this policy changes, the revised version will appear at this address with a new
+  date at the top.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about this policy: <a href="mailto:tedmon.995@gmail.com">tedmon.995@gmail.com</a>.</p>
+
+  <footer>
+    Gmailfy is an independent project. It is not affiliated with, endorsed by, or sponsored
+    by Google LLC or Corsair Memory, Inc. Gmail is a trademark of Google LLC; XENEON and
+    iCUE are trademarks of Corsair Memory, Inc.
+    <br><br>
+    <a href="./">Sign in</a> · <a href="terms.html">Terms of Service</a>
+  </footer>
+</div>
+</body>
+</html>

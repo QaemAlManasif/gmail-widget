@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Gmailfy puts your Gmail on the Corsair XENEON EDGE touchscreen — read, reply, archive and compose from the panel." />
+<title>Gmailfy — Gmail on your XENEON EDGE</title>
+<style>
+  :root { --bg:#0d0d10; --card:#16161a; --card-2:#1d1d22; --line:#2a2a31; --text:#ecedf1; --dim:#93939e; --accent:#ea4335; color-scheme:dark; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:radial-gradient(900px 420px at 15% -12%,rgba(234,67,53,.16),transparent 70%),var(--bg);
+       color:var(--text);font:16px/1.7 "Segoe UI",system-ui,-apple-system,sans-serif;padding:44px 20px 80px}
+  .wrap{max-width:760px;margin:0 auto}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+  .mark{width:56px;height:56px;border-radius:15px;flex:none;background:var(--accent);display:grid;place-items:center}
+  .mark svg{width:36px;height:36px}
+  h1{font-size:30px;font-weight:600;letter-spacing:-.4px}
+  .tag{color:var(--dim);font-size:15px}
+  .lede{font-size:18px;color:#d3d4da;margin-bottom:26px}
+  h2{font-size:19px;font-weight:600;margin:34px 0 10px}
+  p,li{color:#d3d4da}
+  ul{margin:8px 0 0 22px}
+  li{margin-bottom:7px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+  .card b{display:block;margin-bottom:4px}
+  .card span{color:var(--dim);font-size:14px;line-height:1.55}
+  .steps{counter-reset:s;list-style:none;margin:14px 0 0}
+  .steps li{counter-increment:s;position:relative;padding-left:38px;margin-bottom:12px}
+  .steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;
+       background:var(--card-2);border:1px solid var(--line);display:grid;place-items:center;font-size:13px;color:var(--dim)}
+  .cta{display:inline-block;margin-top:22px;padding:14px 24px;border-radius:12px;background:#fff;color:#1f1f1f;
+       font-weight:600;text-decoration:none}
+  a{color:#7fb4ff}
+  footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);color:var(--dim);font-size:14px}
+  code{font-family:Consolas,ui-monospace,monospace;font-size:13px;background:var(--card-2);border:1px solid var(--line);border-radius:6px;padding:2px 6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark"><svg viewBox="0 0 72 72"><g fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M38 17 H15 A7 7 0 0 0 8 24 V48 A7 7 0 0 0 15 55 H38 Z M13 24 L23 32.5 L33 24 V30.5 L23 39 L13 30.5 Z" fill="#fff"/><path d="M54 27 L46 35.5 L54 44" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M46 35.5 H58 A7 7 0 0 1 65 42.5 V48" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g></svg></div>
+    <div>
+      <h1>Gmailfy</h1>
+      <div class="tag">Gmail on the Corsair XENEON EDGE</div>
+    </div>
+  </header>
+
+  <p class="lede">Read it, answer it, clear it — without touching your main screen. Gmailfy
+  puts your real inbox on the EDGE's touchscreen: conversations on the left, the whole thread
+  on the right, and one tap between you and a reply.</p>
+
+  <div class="grid">
+    <div class="card"><b>Your actual inbox</b><span>Threads, not fragments. Inbox, Unread,
+      Starred, Sent and All mail, plus real Gmail search syntax.</span></div>
+    <div class="card"><b>Answer from the panel</b><span>Reply, reply-all, forward and compose,
+      with recipients and quoted text filled in for you.</span></div>
+    <div class="card"><b>One-tap actions</b><span>Star, archive, mark unread, report spam or
+      delete — with an undo on anything that moves.</span></div>
+    <div class="card"><b>New mail, announced</b><span>A banner slides in with the sender and
+      subject, then gets out of the way.</span></div>
+  </div>
+
+  <h2>How signing in works</h2>
+  <p>Google will not sign anyone in on a panel like the EDGE, so your phone does it instead.</p>
+  <ol class="steps">
+    <li>The widget draws a QR code on the EDGE.</li>
+    <li>You scan it and approve with Google, in your phone's normal browser.</li>
+    <li>The key comes back to the panel encrypted, and the inbox opens.</li>
+  </ol>
+  <p>The key is encrypted with a secret that exists only on the EDGE's screen and in the
+  phone that looked at it, so nothing in between can read it — including us.</p>
+
+  <h2>What it accesses</h2>
+  <p>One Google permission: <code>gmail.modify</code> — read your messages, change their
+  labels, and send mail you write in the widget. Nothing else: not your contacts, not your
+  calendar, not your Drive.</p>
+  <p>After sign-in the widget talks to Google directly from your device. Your mail is never
+  routed through a server of ours, because there isn't one. See the
+  <a href="privacy.html">Privacy Policy</a> for the full detail.</p>
+
+  <h2>What you need</h2>
+  <ul>
+    <li>A Corsair XENEON EDGE with iCUE 5.45 or later, on Windows</li>
+    <li>The Gmailfy widget installed on the EDGE dashboard</li>
+    <li>A Gmail or Google Workspace account</li>
+  </ul>
+
+  <a class="cta" href="./">Sign in to connect your EDGE</a>
+
+  <footer>
+    Gmailfy is an independent project. It is not affiliated with, endorsed by, or sponsored
+    by Google LLC or Corsair Memory, Inc. Gmail is a trademark of Google LLC; XENEON and
+    iCUE are trademarks of Corsair Memory, Inc.
+    <br><br>
+    <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Service</a> ·
+    <a href="mailto:tedmon.995@gmail.com">Contact</a>
+  </footer>
+</div>
+</body>
+</html>
