@@ -1,6 +1,6 @@
-# Gmailfy — sign-in page
+# Gmail Connect — sign-in page
 
-The Connect page for **Gmailfy**, a Gmail widget for the Corsair XENEON EDGE.
+The Connect page for **Gmail Connect**, a Gmail widget for the Corsair XENEON EDGE.
 
 The widget on the EDGE draws a QR code. Scanning it opens this page with a one-time
 pairing secret in the URL fragment. After you approve with Google, this page encrypts
@@ -17,7 +17,7 @@ the hourly renewals on the page's behalf.
 | Page | |
 | :-- | :-- |
 | [`index.html`](index.html) | the Connect page (also the OAuth redirect URI) |
-| [`about.html`](about.html) | what Gmailfy is |
+| [`about.html`](about.html) | what Gmail Connect is |
 | [`privacy.html`](privacy.html) | privacy policy |
 | [`terms.html`](terms.html) | terms of service |
 
