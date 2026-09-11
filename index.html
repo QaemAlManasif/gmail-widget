@@ -202,9 +202,9 @@
       <h2>Get your own copy</h2>
       <ol class="do">
         <li><a class="btn small" id="template-link" target="_blank" rel="noreferrer">Open the script ↗</a>
-          Sign in to Google if it asks.</li>
-        <li>On the left edge, click <span class="ui">ⓘ</span> <b>Overview</b>.</li>
-        <li>At the top right, next to the star, click <span class="ui">⧉</span> <b>Make a copy</b>.</li>
+          Sign in to Google if it asks. A page called <b>Project Details</b> opens.</li>
+        <li>At the top right there are three small icons. Click the first one,
+          <span class="ui">⧉</span> <b>Make a copy</b> — it's just left of the star.</li>
       </ol>
       <p class="see"><b>You should see:</b> a new tab with a project called <b>Copy of Gmail
         Connect</b>. That one is yours — use it for the next steps.</p>
@@ -253,8 +253,8 @@
         <li>Google says <b>Authorization required</b>. Click <b>Review permissions</b> and pick
           your Google account.</li>
         <li>Google says <b>Google hasn't verified this app</b>. That's normal — it's your own
-          script. Click <span class="ui plain">Advanced</span> at the bottom left, then
-          <b>Go to Gmail Connect (unsafe)</b>.</li>
+          script. Click <span class="ui plain">Advanced</span> at the bottom left, then the
+          <b>Go to … (unsafe)</b> link under it — it shows your script's name.</li>
         <li>Tick <b>Select all</b>, so the Gmail box is ticked, then click <b>Continue</b>.</li>
       </ol>
       <p class="see"><b>You should see:</b> an <b>Execution log</b> at the bottom that says
@@ -394,7 +394,8 @@
   // The own-script route. Set SCRIPT_TEMPLATE_URL once a template project is
   // shared (README → "The script template"); until then people paste the two
   // files from script/ into script.new themselves.
-  const SCRIPT_TEMPLATE_URL = "";
+  // The Overview page, where the Make a copy button is.
+  const SCRIPT_TEMPLATE_URL = "https://script.google.com/home/projects/1SB0Yk4lVlqoRDaDawXRO9znajB4bfS0F9xK8GEJPvPGuNSZGnuZvGyJx";
   const SCRIPT_URL_RE = /^https:\/\/script\.google\.com\/(?:a\/macros\/[^/]+|macros)\/s\/[\w-]+\/exec$/;
   const SCRIPT_KEY_STORE = "gmw_script:";
 
