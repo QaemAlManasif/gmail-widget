@@ -78,10 +78,36 @@
   .site-foot .disclaim { margin-top: 8px; }
   .or { display: flex; align-items: center; gap: 12px; margin: 20px 0 12px; color: var(--faint); font-size: 13px; }
   .or::before, .or::after { content: ""; flex: 1; height: 1px; background: var(--line); }
-  .steps { margin: 16px 0 0 22px; display: grid; gap: 14px; color: #d4d4d4; }
-  .steps li { padding-left: 4px; }
-  .step-actions { margin: 8px 0; }
   .btn.small { width: auto; min-height: 40px; padding: 0 16px; font-size: 14px; }
+  a.btn { text-decoration: none; }
+  /* The own-script guide: one step per screen. */
+  .wiz-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+  .wiz-count { font-size: 13px; color: var(--dim); letter-spacing: .3px; }
+  .wiz-dots { display: flex; gap: 6px; }
+  .wiz-dots span { width: 22px; height: 5px; border-radius: 3px; background: var(--line); }
+  .wiz-dots span.past { background: rgba(53,201,139,.65); }
+  .wiz-dots span.now { background: var(--accent); }
+  .wiz-step h2 { font-size: 20px; margin-bottom: 10px; }
+  .lede { color: #d4d4d4; }
+  ol.do { margin: 14px 0 0 22px; display: grid; gap: 14px; color: #e5e5e5; }
+  ol.do li { padding-left: 6px; line-height: 1.7; }
+  ol.do .btn.small { margin: 2px 8px 4px 0; vertical-align: middle; }
+  ol.do .field { margin-top: 8px; }
+  ul.checks { margin: 14px 0 0 20px; display: grid; gap: 8px; color: #d4d4d4; }
+  .ui { display: inline-flex; align-items: center; min-height: 24px; padding: 0 8px; border-radius: 6px;
+    background: #262626; border: 1px solid #3a3a3a; font-size: 14px; white-space: nowrap; vertical-align: 1px; }
+  .ui.blue { background: #1a73e8; border-color: #1a73e8; color: #fff; font-weight: 600; }
+  .ui.plain { background: transparent; border-style: dashed; }
+  .key { display: inline-block; min-width: 26px; padding: 0 7px; border-radius: 6px; background: #262626;
+    border: 1px solid #3a3a3a; border-bottom-width: 3px; font: 13px/22px "Segoe UI", system-ui, sans-serif; text-align: center; }
+  .see, .why, .warn, .tip { margin-top: 14px; padding: 12px 14px; border-radius: 11px; font-size: 14px; line-height: 1.6; }
+  .see { background: rgba(53,201,139,.08); border: 1px solid rgba(53,201,139,.3); color: #cdeee0; }
+  .why, .tip { background: var(--card-2); border: 1px solid var(--line); color: #d4d4d4; }
+  .warn { background: rgba(240,87,77,.08); border: 1px solid rgba(240,87,77,.3); color: #ffc9c4; }
+  .wiz-nav { display: flex; gap: 10px; margin-top: 20px; }
+  .wiz-nav #wiz-back { width: auto; flex: none; min-width: 110px; }
+  .inline-link { background: none; border: 0; padding: 0; color: #7fb4ff; text-decoration: underline; font: inherit; cursor: pointer; }
+  .trouble ul { margin: 4px 0 0 20px; display: grid; gap: 10px; color: #d4d4d4; font-size: 14px; }
   .btn.ghost { background: transparent; border: 1px solid var(--line); }
   pre.code { margin-top: 6px; max-height: 340px; overflow: auto; padding: 12px 14px; border-radius: 11px;
     background: var(--card-2); border: 1px solid var(--line); color: #d4d4d4;
@@ -152,39 +178,143 @@
 
   <!-- sign in through the user's own Apps Script: no shared app, no cap -->
   <section class="card hide" id="script">
-    <h2>Sign in with your own Google script</h2>
-    <p style="color:var(--dim)">Google lets the shared sign-in serve only 100 people. This way
-      goes through a small script in <b>your own</b> Google account instead, so there is no
-      limit and nothing is shared with anyone. About three minutes, easiest on a computer.</p>
+    <div class="wiz-head">
+      <div class="wiz-count" id="wiz-count">Before you start</div>
+      <div class="wiz-dots" id="wiz-dots"></div>
+    </div>
 
-    <ol class="steps">
-      <li id="s1-template" class="hide"><b>Make your copy.</b>
-        <a id="template-link" target="_blank" rel="noreferrer">Open the script</a>, press
-        <b>Overview</b> (ⓘ) on the left, then <b>Make a copy</b> (⧉) at the top right.</li>
-      <li id="s1-paste"><b>Make your copy.</b> Open
-        <a href="https://script.new" target="_blank" rel="noreferrer">script.new</a> and replace
-        everything in <b>Code.gs</b> with this:
-        <div class="step-actions"><button class="btn small" id="copy-gs" type="button" disabled>Copy the code</button></div>
-        Then open <b>Project Settings</b> (⚙), tick <b>Show "appsscript.json" manifest file in
-        editor</b>, go back to the editor, and replace everything in <b>appsscript.json</b> with this:
-        <div class="step-actions"><button class="btn small" id="copy-manifest" type="button" disabled>Copy the settings</button></div>
-        Press <b>Save</b>.</li>
-      <li><b>Deploy it.</b> <b>Deploy</b> → <b>New deployment</b> → ⚙ → <b>Web app</b>. Check it
-        says <b>Execute as: Me</b> and <b>Who has access: Anyone</b>, then press <b>Deploy</b>
-        and <b>Authorize access</b>.</li>
-      <li><b>Allow it.</b> Google says it hasn't verified this app — expected for your own
-        script. <b>Check the email it shows is yours</b>, then <b>Advanced</b> →
-        <b>Go to … (unsafe)</b> → <b>Allow</b>. If it names anyone else, stop.</li>
-      <li><b>Paste its link.</b> Copy the <b>Web app URL</b> — it ends in <code>/exec</code>.
-        <div class="field">
-          <label for="script-url">Web app URL</label>
-          <input type="text" id="script-url" spellcheck="false" autocomplete="off"
-                 placeholder="https://script.google.com/macros/s/…/exec" />
-        </div>
-      </li>
-    </ol>
-    <div class="row" style="margin-top:16px"><button class="btn primary" id="script-go" type="button">Connect</button></div>
-    <div class="msg bad" id="script-err"></div>
+    <div class="wiz-step" data-step="intro">
+      <h2>Sign in with your own Google script</h2>
+      <p class="lede">Google lets the normal sign-in serve only 100 people. This way has no limit:
+        you make your own copy of a small sign-in script, in your own Google account, and switch
+        it on. No coding — just copy, paste and click. About 3 minutes.</p>
+      <ul class="checks">
+        <li><b>Use a computer.</b> Google's script page is hard to use on a phone.</li>
+        <li><b>Keep this page open.</b> You'll go back and forth between this page and Google's.</li>
+        <li><b>Use the Google account</b> of the Gmail you want on your EDGE.</li>
+      </ul>
+      <div class="tip hide" id="wiz-phone">On a phone? On your EDGE, tap <b>Open link</b> — this
+        page opens on your PC, ready to go.</div>
+      <div class="row" style="margin-top:16px"><button class="btn ghost" id="script-back" type="button">Back to Sign in with Google</button></div>
+    </div>
+
+    <div class="wiz-step hide" data-step="copy">
+      <h2>Get your own copy</h2>
+      <ol class="do">
+        <li><a class="btn small" id="template-link" target="_blank" rel="noreferrer">Open the script ↗</a>
+          Sign in to Google if it asks.</li>
+        <li>On the left edge, click <span class="ui">ⓘ</span> <b>Overview</b>.</li>
+        <li>At the top right, next to the star, click <span class="ui">⧉</span> <b>Make a copy</b>.</li>
+      </ol>
+      <p class="see"><b>You should see:</b> a new tab with a project called <b>Copy of Gmail
+        Connect</b>. That one is yours — use it for the next steps.</p>
+    </div>
+
+    <div class="wiz-step hide" data-step="create">
+      <h2>Create the script</h2>
+      <ol class="do">
+        <li><a class="btn small" href="https://script.new" target="_blank" rel="noreferrer">Open script.new ↗</a>
+          Sign in to Google if it asks. A page called <b>Untitled project</b> opens, with a little
+          code in it.</li>
+        <li>Click anywhere inside that code, then press <span class="key">Ctrl</span> + <span class="key">A</span>
+          to select all of it.</li>
+        <li><button class="btn small" id="copy-gs" type="button" disabled>Copy the code</button>
+          then go back to Google's page and press <span class="key">Ctrl</span> + <span class="key">V</span>.</li>
+        <li>Click <b>Untitled project</b> at the top, type <b>Gmail Connect</b>, and click
+          <b>Rename</b>.</li>
+      </ol>
+      <p class="see"><b>You should see:</b> the code now starts with
+        <b>Gmail Connect — your own sign-in script</b>.</p>
+    </div>
+
+    <div class="wiz-step hide" data-step="settings">
+      <h2>Add its settings</h2>
+      <p class="why">This is what tells Google the script needs your Gmail. It's the step people
+        miss most — without it, sign-in fails at the end.</p>
+      <ol class="do">
+        <li>On the left edge, click <span class="ui">⚙</span> <b>Project Settings</b>.</li>
+        <li>Tick <b>Show "appsscript.json" manifest file in editor</b>.</li>
+        <li>On the left edge, click <span class="ui">&lt; &gt;</span> <b>Editor</b>. A new file,
+          <b>appsscript.json</b>, is now in the file list. Click it.</li>
+        <li>Click inside it and press <span class="key">Ctrl</span> + <span class="key">A</span>.</li>
+        <li><button class="btn small" id="copy-manifest" type="button" disabled>Copy the settings</button>
+          then go back to Google's page and press <span class="key">Ctrl</span> + <span class="key">V</span>.</li>
+        <li>Press <span class="key">Ctrl</span> + <span class="key">S</span> to save.</li>
+      </ol>
+      <p class="see"><b>You should see:</b> <b>appsscript.json</b> now has
+        <b>gmail.modify</b> in it.</p>
+    </div>
+
+    <div class="wiz-step hide" data-step="permission">
+      <h2>Give it permission</h2>
+      <ol class="do">
+        <li>Click <b>Code.gs</b> in the file list. In the bar above the code, the box next to
+          <span class="ui">▷ Run</span> says <b>allowGmail</b>. Click <span class="ui">▷ Run</span>.</li>
+        <li>Google says <b>Authorization required</b>. Click <b>Review permissions</b> and pick
+          your Google account.</li>
+        <li>Google says <b>Google hasn't verified this app</b>. That's normal — it's your own
+          script. Click <span class="ui plain">Advanced</span> at the bottom left, then
+          <b>Go to Gmail Connect (unsafe)</b>.</li>
+        <li>Tick <b>Select all</b>, so the Gmail box is ticked, then click <b>Continue</b>.</li>
+      </ol>
+      <p class="see"><b>You should see:</b> an <b>Execution log</b> at the bottom that says
+        <b>Gmail permission is on.</b></p>
+      <p class="warn">Google's warning names the app's developer. It should be <b>your own
+        email</b>. If it names anyone else, stop — that isn't your copy.</p>
+    </div>
+
+    <div class="wiz-step hide" data-step="deploy">
+      <h2>Switch it on</h2>
+      <ol class="do">
+        <li>At the top right, click the blue <span class="ui blue">Deploy ▾</span>, then
+          <b>New deployment</b>.</li>
+        <li>Next to <b>Select type</b>, click the gear <span class="ui">⚙</span> and choose
+          <b>Web app</b>.</li>
+        <li>Check the two settings: <b>Execute as</b> is <b>Me</b>, and <b>Who has access</b> is
+          <b>Anyone</b>. Change them if they say anything else.</li>
+        <li>Click <span class="ui blue">Deploy</span>. If Google asks for permission again,
+          allow it the same way as in the last step.</li>
+      </ol>
+      <p class="why"><b>Is "Anyone" safe?</b> Yes. The script ignores anyone who doesn't have
+        the secret your widget gets in the next step — and only this page can get it, once.</p>
+    </div>
+
+    <div class="wiz-step hide" data-step="link">
+      <h2>Connect it</h2>
+      <ol class="do">
+        <li>Google shows a box with a <b>Web app</b> link that ends in <b>/exec</b>. Click
+          <b>Copy</b> under it.</li>
+        <li>Paste it here:
+          <div class="field">
+            <input type="text" id="script-url" spellcheck="false" autocomplete="off"
+                   aria-label="Web app link" placeholder="https://script.google.com/macros/s/…/exec" />
+          </div>
+        </li>
+      </ol>
+      <div class="row" style="margin-top:14px"><button class="btn primary" id="script-go" type="button">Connect</button></div>
+      <div class="msg bad" id="script-err"></div>
+      <details class="trouble">
+        <summary>Something went wrong?</summary>
+        <ul>
+          <li><b>"No Gmail permission"</b> — in your script, check the box next to
+            <span class="ui">▷ Run</span> says <b>allowGmail</b>, click Run, tick <b>Select all</b>
+            and <b>Continue</b>. Then press Connect again.</li>
+          <li><b>"Already connected to a widget"</b> — in your script, pick <b>resetSecret</b> in
+            the box next to <span class="ui">▷ Run</span>, click Run, then press Connect again.</li>
+          <li><b>You changed the code or settings after switching it on</b> — Google keeps using
+            the old version until you publish a new one: <span class="ui blue">Deploy ▾</span> →
+            <b>Manage deployments</b> → ✎ (pencil) → <b>Version: New version</b> →
+            <b>Deploy</b>. The link stays the same.</li>
+          <li><b>"Could not reach that script"</b> — check the link ends in <b>/exec</b>, and that
+            <b>Who has access</b> is <b>Anyone</b>.</li>
+        </ul>
+      </details>
+    </div>
+
+    <div class="wiz-nav">
+      <button class="btn ghost hide" id="wiz-back" type="button">Back</button>
+      <button class="btn primary" id="wiz-next" type="button">Start</button>
+    </div>
 
     <details>
       <summary>Read the script first</summary>
@@ -192,9 +322,8 @@
     </details>
     <p class="note">The script only hands your widget a one-hour key to your mailbox, and only
       when the widget shows the secret it gets here. It never touches your mail itself. To cut it
-      off, open the script and run <b>resetSecret</b>, or remove it at
+      off, run <b>resetSecret</b> in it, or remove it at
       <a href="https://myaccount.google.com/permissions" target="_blank" rel="noreferrer">myaccount.google.com/permissions</a>.</p>
-    <div class="row" style="margin-top:6px"><button class="btn ghost" id="script-back" type="button">Back to Sign in with Google</button></div>
   </section>
 
   <!-- working -->
@@ -589,16 +718,89 @@
     $("copy-manifest").disabled = !scriptFiles.manifest;
   }
 
+  // One step per screen: one thing to do in Google's editor, exactly what to
+  // click, and what should be on screen afterwards.
+  const WIZ_STEPS = {
+    template: ["intro", "copy", "permission", "deploy", "link"],
+    paste: ["intro", "create", "settings", "permission", "deploy", "link"],
+  };
+  let wizSteps = WIZ_STEPS.paste;
+  let wizAt = 0;
+
+  function wizRender() {
+    const current = wizSteps[wizAt];
+    document.querySelectorAll(".wiz-step").forEach(s => s.classList.toggle("hide", s.dataset.step !== current));
+    const total = wizSteps.length - 1;
+    $("wiz-count").textContent = wizAt === 0 ? "Before you start" : "Step " + wizAt + " of " + total;
+    const dots = $("wiz-dots");
+    dots.textContent = "";
+    for (let i = 1; i <= total; i++) {
+      const d = document.createElement("span");
+      // Not "done": that class already styles the success card.
+      if (i < wizAt) d.className = "past";
+      else if (i === wizAt) d.className = "now";
+      dots.appendChild(d);
+    }
+    show("wiz-back", wizAt > 0);
+    show("wiz-next", wizAt < wizSteps.length - 1);
+    $("wiz-next").textContent = wizAt === 0 ? "Start" : "Next";
+    window.scrollTo(0, 0);
+  }
+
+  function wizGo(step) {
+    const i = wizSteps.indexOf(step);
+    if (i < 0) return;
+    wizAt = i;
+    wizRender();
+  }
+
   function showScript() {
     clearFail("script-err");
     ["signin", "ask", "unconfigured"].forEach(id => show(id, false));
     show("script", true);
-    const template = !!SCRIPT_TEMPLATE_URL;
-    show("s1-template", template);
-    show("s1-paste", !template);
-    if (template) $("template-link").href = SCRIPT_TEMPLATE_URL;
+    wizSteps = SCRIPT_TEMPLATE_URL ? WIZ_STEPS.template : WIZ_STEPS.paste;
+    if (SCRIPT_TEMPLATE_URL) $("template-link").href = SCRIPT_TEMPLATE_URL;
+    // Google's editor is miserable on a phone, and the widget's Open link
+    // puts this page on the PC in one tap.
+    show("wiz-phone", matchMedia("(pointer: coarse)").matches);
+    wizAt = 0;
+    wizRender();
     loadScriptFiles();
-    window.scrollTo(0, 0);
+  }
+
+  // What each refusal means, told as the step that fixes it.
+  const SCRIPT_PROBLEMS = {
+    needs_permission: ["Your script is on, but Google wasn't given permission for Gmail — the "
+      + "box on Google's permission screen was left unticked. Do the permission step again, "
+      + "tick Select all, then press Connect here.", "permission"],
+    no_gmail_scope: ["Your script doesn't ask for Gmail — usually the settings step "
+      + "(appsscript.json) was skipped or not saved. Do that step, run allowGmail, then publish "
+      + "the change: Deploy → Manage deployments → ✎ → Version: New version → Deploy. Then "
+      + "press Connect here again.", "settings"],
+    already_claimed: ["This script is already connected to a widget. To connect it again, pick "
+      + "resetSecret next to Run in your script, click Run, then press Connect here.", ""],
+  };
+
+  function scriptProblem(code) {
+    const known = SCRIPT_PROBLEMS[code];
+    const e = new Error(known ? known[0] : "The script refused (" + code + ").");
+    e.step = known ? known[1] : "";
+    return e;
+  }
+
+  function scriptFail(text, step) {
+    const box = $("script-err");
+    box.textContent = text;
+    if (step && wizSteps.includes(step)) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "inline-link";
+      b.textContent = "Show me that step";
+      b.addEventListener("click", () => wizGo(step));
+      box.appendChild(document.createTextNode(" "));
+      box.appendChild(b);
+    }
+    box.classList.add("show");
   }
 
   // Apps Script answers a plain-text POST without a CORS preflight, then
@@ -622,6 +824,8 @@
 
   $("script-open").addEventListener("click", showScript);
   $("script-back").addEventListener("click", () => { show("script", false); showSignIn(); });
+  $("wiz-next").addEventListener("click", () => { wizAt = Math.min(wizAt + 1, wizSteps.length - 1); wizRender(); });
+  $("wiz-back").addEventListener("click", () => { wizAt = Math.max(wizAt - 1, 0); wizRender(); });
   $("copy-gs").addEventListener("click", () => copy(scriptFiles.gs, $("copy-gs")));
   $("copy-manifest").addEventListener("click", () => copy(scriptFiles.manifest, $("copy-manifest")));
   $("script-url").addEventListener("keydown", e => { if (e.key === "Enter") $("script-go").click(); });
@@ -630,27 +834,34 @@
     clearFail("script-err");
     const url = $("script-url").value.trim().replace(/[?#].*$/, "");
     if (!SCRIPT_URL_RE.test(url)) {
-      return fail("script-err", "That doesn't look like a web app link. It starts with "
-        + "https://script.google.com/ and ends in /exec.");
+      return scriptFail("That doesn't look like the right link. It starts with "
+        + "https://script.google.com/ and ends in /exec — use the Copy button under Web app.", "");
     }
     scriptBusy(true);
     try {
-      // The secret is claimed once. It is kept for this tab, so a retry
-      // after fixing a step below does not find the script already claimed.
+      // A token for this secret, null when the script no longer knows the
+      // secret (so a fresh claim is worth trying), or the setup problem.
+      // An older copy of the script reports a missing Gmail scope as an
+      // empty token rather than by name.
+      const tokenFor = async key => {
+        const t = await callScript(url, { k: key });
+        if (t.access_token) return t;
+        if (t.error === "bad_key" || t.error === "not_claimed") return null;
+        throw scriptProblem(t.error || "no_gmail_scope");
+      };
+      // The secret is kept for this tab, so pressing Connect again after
+      // fixing a step reuses it instead of claiming a new one.
       let key = sessionStorage.getItem(SCRIPT_KEY_STORE + url) || "";
-      let tok = key ? await callScript(url, { k: key }) : null;
-      if (!tok || !tok.access_token) {
+      let tok = key ? await tokenFor(key) : null;
+      if (!tok) {
         const claim = await callScript(url, { op: "claim" });
-        if (claim.error === "already_claimed") {
-          throw new Error("This script is already linked to a widget. To link it again, open the "
-            + "script, choose resetSecret in the toolbar, press Run, and try here once more.");
-        }
-        if (!claim.key) throw new Error("The script did not answer as expected — check it is the code from step 1.");
+        if (claim.error) throw scriptProblem(claim.error);
+        if (!claim.key) throw new Error("That link answered, but not like the Gmail Connect script.");
         key = claim.key;
         sessionStorage.setItem(SCRIPT_KEY_STORE + url, key);
-        tok = await callScript(url, { k: key });
+        tok = await tokenFor(key);
+        if (!tok) throw scriptProblem("bad_key");
       }
-      if (!tok.access_token) throw new Error("The script refused: " + (tok.error || "no key"));
 
       // Proves the whole chain before anything reaches the EDGE: the token
       // works, it carries the Gmail permission, and Gmail is on for it.
@@ -658,12 +869,13 @@
       const pj = await p.json().catch(() => ({}));
       if (!p.ok) {
         const m = (pj.error && pj.error.message) || ("HTTP " + p.status);
-        const redeploy = " then Deploy → Manage deployments → ✎ → Version: New version → Deploy, and try again.";
-        if (/insufficient.*scope/i.test(m)) {
-          throw new Error("The script has no permission for Gmail. Check appsscript.json was replaced in step 1," + redeploy);
-        }
+        if (/insufficient.*scope/i.test(m)) throw scriptProblem("no_gmail_scope");
         if (/has not been used|is disabled|not been enabled/i.test(m)) {
-          throw new Error("Gmail isn't switched on for the script yet. In the editor press Services (+), add Gmail API," + redeploy);
+          const e = new Error("Gmail isn't switched on for your script yet — the settings step "
+            + "(appsscript.json) switches it on. Do that step, then publish the change: Deploy → "
+            + "Manage deployments → ✎ → Version: New version → Deploy.");
+          e.step = "settings";
+          throw e;
         }
         throw new Error("Gmail refused the script's key — " + m);
       }
@@ -673,9 +885,12 @@
       show("script", false);
       await handOver(connection, email, pairSecret);
     } catch (e) {
-      fail("script-err", e instanceof TypeError
-        ? "Could not reach that script. Check the link, and that the deployment's Who has access is Anyone."
-        : e.message);
+      if (e instanceof TypeError) {
+        scriptFail("Could not reach that script. Check the link ends in /exec, and that Who has "
+          + "access is set to Anyone.", "deploy");
+      } else {
+        scriptFail(e.message, e.step);
+      }
     } finally {
       scriptBusy(false);
     }
