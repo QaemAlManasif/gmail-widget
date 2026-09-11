@@ -76,6 +76,16 @@
   .site-foot { margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--line);
     color: var(--faint); font-size: 13px; text-align: center; line-height: 1.7; }
   .site-foot .disclaim { margin-top: 8px; }
+  .or { display: flex; align-items: center; gap: 12px; margin: 20px 0 12px; color: var(--faint); font-size: 13px; }
+  .or::before, .or::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .steps { margin: 16px 0 0 22px; display: grid; gap: 14px; color: #d4d4d4; }
+  .steps li { padding-left: 4px; }
+  .step-actions { margin: 8px 0; }
+  .btn.small { width: auto; min-height: 40px; padding: 0 16px; font-size: 14px; }
+  .btn.ghost { background: transparent; border: 1px solid var(--line); }
+  pre.code { margin-top: 6px; max-height: 340px; overflow: auto; padding: 12px 14px; border-radius: 11px;
+    background: var(--card-2); border: 1px solid var(--line); color: #d4d4d4;
+    font: 12px/1.55 Consolas, "Cascadia Mono", ui-monospace, monospace; white-space: pre; }
 </style>
 </head>
 <body>
@@ -121,6 +131,8 @@
       allow "Gmail" in an app name.) <a href="privacy.html">What it can see</a> ·
       <a href="own-key.html">Use your own key</a></p>
     <div class="msg bad" id="err"></div>
+    <div class="or">or, if Google says the sign-in is full</div>
+    <button class="btn secondary" id="script-open" type="button">Sign in with your own Google script</button>
     <details id="own-key">
       <summary>Use a Google key of my own instead</summary>
       <p class="note" style="margin-top:0">For your own Google Cloud project — no shared app,
@@ -136,6 +148,53 @@
       <div class="field"><label for="csec">Client secret</label>
         <input type="text" id="csec" spellcheck="false" placeholder="GOCSPX-…" /></div>
     </details>
+  </section>
+
+  <!-- sign in through the user's own Apps Script: no shared app, no cap -->
+  <section class="card hide" id="script">
+    <h2>Sign in with your own Google script</h2>
+    <p style="color:var(--dim)">Google lets the shared sign-in serve only 100 people. This way
+      goes through a small script in <b>your own</b> Google account instead, so there is no
+      limit and nothing is shared with anyone. About three minutes, easiest on a computer.</p>
+
+    <ol class="steps">
+      <li id="s1-template" class="hide"><b>Make your copy.</b>
+        <a id="template-link" target="_blank" rel="noreferrer">Open the script</a>, press
+        <b>Overview</b> (ⓘ) on the left, then <b>Make a copy</b> (⧉) at the top right.</li>
+      <li id="s1-paste"><b>Make your copy.</b> Open
+        <a href="https://script.new" target="_blank" rel="noreferrer">script.new</a> and replace
+        everything in <b>Code.gs</b> with this:
+        <div class="step-actions"><button class="btn small" id="copy-gs" type="button" disabled>Copy the code</button></div>
+        Then open <b>Project Settings</b> (⚙), tick <b>Show "appsscript.json" manifest file in
+        editor</b>, go back to the editor, and replace everything in <b>appsscript.json</b> with this:
+        <div class="step-actions"><button class="btn small" id="copy-manifest" type="button" disabled>Copy the settings</button></div>
+        Press <b>Save</b>.</li>
+      <li><b>Deploy it.</b> <b>Deploy</b> → <b>New deployment</b> → ⚙ → <b>Web app</b>. Check it
+        says <b>Execute as: Me</b> and <b>Who has access: Anyone</b>, then press <b>Deploy</b>
+        and <b>Authorize access</b>.</li>
+      <li><b>Allow it.</b> Google says it hasn't verified this app — expected for your own
+        script. <b>Check the email it shows is yours</b>, then <b>Advanced</b> →
+        <b>Go to … (unsafe)</b> → <b>Allow</b>. If it names anyone else, stop.</li>
+      <li><b>Paste its link.</b> Copy the <b>Web app URL</b> — it ends in <code>/exec</code>.
+        <div class="field">
+          <label for="script-url">Web app URL</label>
+          <input type="text" id="script-url" spellcheck="false" autocomplete="off"
+                 placeholder="https://script.google.com/macros/s/…/exec" />
+        </div>
+      </li>
+    </ol>
+    <div class="row" style="margin-top:16px"><button class="btn primary" id="script-go" type="button">Connect</button></div>
+    <div class="msg bad" id="script-err"></div>
+
+    <details>
+      <summary>Read the script first</summary>
+      <pre class="code" id="gs-view">Loading…</pre>
+    </details>
+    <p class="note">The script only hands your widget a one-hour key to your mailbox, and only
+      when the widget shows the secret it gets here. It never touches your mail itself. To cut it
+      off, open the script and run <b>resetSecret</b>, or remove it at
+      <a href="https://myaccount.google.com/permissions" target="_blank" rel="noreferrer">myaccount.google.com/permissions</a>.</p>
+    <div class="row" style="margin-top:6px"><button class="btn ghost" id="script-back" type="button">Back to Sign in with Google</button></div>
   </section>
 
   <!-- working -->
@@ -161,8 +220,7 @@
   <section class="card hide" id="manual">
     <h2>Copy this to the widget</h2>
     <p style="color:var(--dim)">The key could not be delivered automatically. Copy the string
-      below, then on the EDGE tap <b>Paste a connection string instead</b> — or paste it into
-      <b>Gmail connection</b> in the widget's iCUE settings.</p>
+      below and paste it into <b>Gmail connection</b> in the widget's settings in iCUE.</p>
     <div class="copybox">
       <textarea id="conn" readonly spellcheck="false"></textarea>
       <button class="btn primary" id="copy-conn" type="button">Copy</button>
@@ -203,6 +261,13 @@
   const TOKEN_URL = "https://oauth2.googleapis.com/token";
   const PROFILE_URL = "https://gmail.googleapis.com/gmail/v1/users/me/profile";
   const REDIRECT = location.origin + location.pathname;
+
+  // The own-script route. Set SCRIPT_TEMPLATE_URL once a template project is
+  // shared (README → "The script template"); until then people paste the two
+  // files from script/ into script.new themselves.
+  const SCRIPT_TEMPLATE_URL = "";
+  const SCRIPT_URL_RE = /^https:\/\/script\.google\.com\/(?:a\/macros\/[^/]+|macros)\/s\/[\w-]+\/exec$/;
+  const SCRIPT_KEY_STORE = "gmw_script:";
 
   const $ = id => document.getElementById(id);
 
@@ -382,6 +447,9 @@
     let pending = null;
     try { pending = JSON.parse(sessionStorage.getItem("gmw_pending") || "null"); } catch (e) {}
     sessionStorage.removeItem("gmw_pending");
+    // Google's redirect drops the fragment, so the pairing secret comes back
+    // from here — needed if this sign-in fails and the script route is next.
+    if (pending && pending.secret) pairSecret = pending.secret;
 
     if (error) {
       showSignIn();
@@ -392,12 +460,13 @@
         e.textContent = "";
         e.appendChild(document.createTextNode(
           "Sign-in did not complete. Either you cancelled it, or this app has reached Google's "
-          + "limit of 100 people. If you did not cancel, use a Google key of your own — "));
+          + "limit of 100 people. If you did not cancel, "));
         const a = document.createElement("a");
-        a.href = "own-key.html";
-        a.textContent = "here is how";
+        a.href = "#";
+        a.textContent = "sign in with your own Google script";
+        a.addEventListener("click", ev => { ev.preventDefault(); showScript(); });
         e.appendChild(a);
-        e.appendChild(document.createTextNode("."));
+        e.appendChild(document.createTextNode(" instead — it has no limit."));
         e.classList.add("show");
       } else {
         fail("err", "Google said: " + error);
@@ -473,26 +542,144 @@
       : JSON.stringify({ r: tok.refresh_token, e: email });
     const connection = "gmw1." + b64url(new TextEncoder().encode(payload));
 
-    if (pending.secret) {
+    await handOver(connection, email, pending.secret);
+    return true;
+  }
+
+  // Both routes end here: deliver the connection string to the EDGE through
+  // the courier or, failing that, show it to copy by hand.
+  async function handOver(connection, email, secret) {
+    show("working", true);
+    if (secret) {
       try {
-        await deposit(pending.secret, connection);
+        await deposit(secret, connection);
         show("working", false);
         show("done", true);
         $("who").textContent = email;
-        return true;
+        return;
       } catch (e) {
         // Fall through to the clipboard route rather than stranding a
         // sign-in the user has already given.
         console.warn("pairing handover failed:", e);
       }
     }
-
     show("working", false);
     show("manual", true);
     $("conn").value = connection;
-    $("copy-conn").addEventListener("click", () => copy(connection, $("copy-conn")));
-    return true;
+    $("copy-conn").onclick = () => copy(connection, $("copy-conn"));
   }
+
+  // ── own Apps Script ──────────────────────────────────────────────
+  const scriptFiles = { gs: "", manifest: "" };
+
+  // One source for the code people copy and the code they can read here.
+  async function loadScriptFiles() {
+    if (!scriptFiles.gs) {
+      try {
+        const [gs, manifest] = await Promise.all([
+          fetch("script/Code.gs").then(r => (r.ok ? r.text() : "")),
+          fetch("script/appsscript.json").then(r => (r.ok ? r.text() : "")),
+        ]);
+        scriptFiles.gs = gs;
+        scriptFiles.manifest = manifest;
+      } catch (e) {}
+    }
+    $("gs-view").textContent = scriptFiles.gs || "The script could not be loaded. Reload this page.";
+    $("copy-gs").disabled = !scriptFiles.gs;
+    $("copy-manifest").disabled = !scriptFiles.manifest;
+  }
+
+  function showScript() {
+    clearFail("script-err");
+    ["signin", "ask", "unconfigured"].forEach(id => show(id, false));
+    show("script", true);
+    const template = !!SCRIPT_TEMPLATE_URL;
+    show("s1-template", template);
+    show("s1-paste", !template);
+    if (template) $("template-link").href = SCRIPT_TEMPLATE_URL;
+    loadScriptFiles();
+    window.scrollTo(0, 0);
+  }
+
+  // Apps Script answers a plain-text POST without a CORS preflight, then
+  // redirects to a googleusercontent.com page that allows any origin.
+  async function callScript(url, body) {
+    const r = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(body),
+    });
+    const j = await r.json().catch(() => null);
+    if (!j) throw new Error("That link answered, but not like the Gmail Connect script. "
+      + "Check it is the code from step 1, deployed as a web app.");
+    return j;
+  }
+
+  function scriptBusy(on) {
+    $("script-go").disabled = on;
+    $("script-go").textContent = on ? "Connecting…" : "Connect";
+  }
+
+  $("script-open").addEventListener("click", showScript);
+  $("script-back").addEventListener("click", () => { show("script", false); showSignIn(); });
+  $("copy-gs").addEventListener("click", () => copy(scriptFiles.gs, $("copy-gs")));
+  $("copy-manifest").addEventListener("click", () => copy(scriptFiles.manifest, $("copy-manifest")));
+  $("script-url").addEventListener("keydown", e => { if (e.key === "Enter") $("script-go").click(); });
+
+  $("script-go").addEventListener("click", async () => {
+    clearFail("script-err");
+    const url = $("script-url").value.trim().replace(/[?#].*$/, "");
+    if (!SCRIPT_URL_RE.test(url)) {
+      return fail("script-err", "That doesn't look like a web app link. It starts with "
+        + "https://script.google.com/ and ends in /exec.");
+    }
+    scriptBusy(true);
+    try {
+      // The secret is claimed once. It is kept for this tab, so a retry
+      // after fixing a step below does not find the script already claimed.
+      let key = sessionStorage.getItem(SCRIPT_KEY_STORE + url) || "";
+      let tok = key ? await callScript(url, { k: key }) : null;
+      if (!tok || !tok.access_token) {
+        const claim = await callScript(url, { op: "claim" });
+        if (claim.error === "already_claimed") {
+          throw new Error("This script is already linked to a widget. To link it again, open the "
+            + "script, choose resetSecret in the toolbar, press Run, and try here once more.");
+        }
+        if (!claim.key) throw new Error("The script did not answer as expected — check it is the code from step 1.");
+        key = claim.key;
+        sessionStorage.setItem(SCRIPT_KEY_STORE + url, key);
+        tok = await callScript(url, { k: key });
+      }
+      if (!tok.access_token) throw new Error("The script refused: " + (tok.error || "no key"));
+
+      // Proves the whole chain before anything reaches the EDGE: the token
+      // works, it carries the Gmail permission, and Gmail is on for it.
+      const p = await fetch(PROFILE_URL, { headers: { Authorization: "Bearer " + tok.access_token } });
+      const pj = await p.json().catch(() => ({}));
+      if (!p.ok) {
+        const m = (pj.error && pj.error.message) || ("HTTP " + p.status);
+        const redeploy = " then Deploy → Manage deployments → ✎ → Version: New version → Deploy, and try again.";
+        if (/insufficient.*scope/i.test(m)) {
+          throw new Error("The script has no permission for Gmail. Check appsscript.json was replaced in step 1," + redeploy);
+        }
+        if (/has not been used|is disabled|not been enabled/i.test(m)) {
+          throw new Error("Gmail isn't switched on for the script yet. In the editor press Services (+), add Gmail API," + redeploy);
+        }
+        throw new Error("Gmail refused the script's key — " + m);
+      }
+      const email = pj.emailAddress || "";
+      sessionStorage.removeItem(SCRIPT_KEY_STORE + url);
+      const connection = "gmw1." + b64url(new TextEncoder().encode(JSON.stringify({ u: url, k: key, e: email })));
+      show("script", false);
+      await handOver(connection, email, pairSecret);
+    } catch (e) {
+      fail("script-err", e instanceof TypeError
+        ? "Could not reach that script. Check the link, and that the deployment's Who has access is Anyone."
+        : e.message);
+    } finally {
+      scriptBusy(false);
+    }
+  });
 
   async function loadConfig() {
     try {
