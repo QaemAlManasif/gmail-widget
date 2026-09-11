@@ -30,7 +30,7 @@
     <div class="mark"><svg viewBox="6 16 64 40" fill="none"><path d="M12 54 V22 L24 37 L36 22 V54" stroke="#fff" stroke-width="9" stroke-linejoin="round" stroke-linecap="butt"/><path d="M55 28 L47 36 L55 44" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M47 36 H59 A7 7 0 0 1 66 43 V49" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <h1>Privacy Policy</h1>
   </header>
-  <p class="updated">Gmail Connect — a widget for the Corsair XENEON EDGE. Last updated 10 September 2026.</p>
+  <p class="updated">Gmail Connect — a widget for the Corsair XENEON EDGE. Last updated 11 September 2026.</p>
 
   <p>Gmail Connect shows your Gmail on the touchscreen of a Corsair XENEON EDGE and lets you
   read, reply to, and organise it there. This policy explains exactly what it touches.</p>
@@ -62,10 +62,15 @@
 
   <h2>What is stored, and where</h2>
   <ul>
-    <li><b>On your device.</b> The Google refresh token for the mailbox you connected, your
-      display preferences, and any unsent draft, all in the widget's local browser storage.
-      Pressing <b>Disconnect</b> in the widget erases them and asks Google to revoke the
-      token.</li>
+    <li><b>On your device.</b> The key for the mailbox you connected — a Google refresh token,
+      or, if you signed in with your own Google script, that script's address and the secret it
+      issued — plus your display preferences and any unsent draft, all in the widget's local
+      browser storage. Pressing <b>Disconnect</b> in the widget erases them and asks Google to
+      revoke the token, or tells your script to forget its secret.</li>
+    <li><b>In your own Google account, if you chose that route.</b> Signing in with your own
+      Google script puts a small Apps Script project in your Google Drive. It belongs to you,
+      runs as you, and only ever hands your widget a one-hour access token. We have no access to
+      it.</li>
     <li><b>During sign-in only, for at most ten minutes.</b> Signing in happens in a real
       browser, which then has to hand the key to your EDGE. It does so through a small
       database record. That record is <b>encrypted before it leaves the browser</b>, with a
@@ -102,6 +107,8 @@
     <li>In your Google Account:
       <a href="https://myaccount.google.com/permissions" target="_blank" rel="noreferrer">myaccount.google.com/permissions</a>,
       which cuts off access even if the device is out of reach.</li>
+    <li>If you signed in with your own Google script: open it and run <b>resetSecret</b>, or
+      delete the project.</li>
   </ul>
   <p>Because nothing about your mailbox is held by us, there is nothing further for us to
   delete on request.</p>
